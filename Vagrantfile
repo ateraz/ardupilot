@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # and this is the default box that will be booted if no name is specified
   config.vm.boot_timeout = 1500
 
-  config.vm.define "autotest-server", primary: true do |autotest|
+  config.vm.define "autotest-server", autostart: false do |autotest|
     autotest.vm.box = "ubuntu/jammy64"
     autotest.vm.provision :shell, path: "Tools/vagrant/initvagrant-autotest-server.sh"
     autotest.vm.provider "virtualbox" do |vb|
@@ -77,7 +77,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # 22.04 LTS EOL Apr 2032
-  config.vm.define "jammy", primary: true do |jammy|
+  config.vm.define "jammy", autostart: false do |jammy|
     jammy.vm.box = "ubuntu/jammy64"
     jammy.vm.provision :shell, path: "Tools/vagrant/initvagrant.sh"
     jammy.vm.provider "virtualbox" do |vb|
@@ -136,8 +136,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # 24.04 end of standard support Jun 2029
   # note the use of "bento" here; Ubuntu stopped providing Vagrant
   # images due to Hashicorp adopting the "Business Source License".
-  config.vm.define "noble", autostart: false do |noble|
-    noble.vm.box = "bento/ubuntu-24.04"
+  config.vm.define "noble", primary: true do |noble|
+    noble.vm.box = "bento/ubuntu-22.04"
+    noble.vm.box_version = "202508.03.0"
     noble.vm.provision :shell, path: "Tools/vagrant/initvagrant.sh"
     noble.vm.provider "virtualbox" do |vb|
       vb.name = "ArduPilot (noble)"
