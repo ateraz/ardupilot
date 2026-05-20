@@ -139,11 +139,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "noble", primary: true do |noble|
     noble.vm.box = "bento/ubuntu-22.04"
     noble.vm.box_version = "202508.03.0"
+    noble.vm.synced_folder ".", "/vagrant", type: "rsync",
+      rsync__exclude: ["build/"]
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      noble.vbguest.auto_update = false
+    end
+    noble.vm.provision :shell, inline: "cd /vagrant && if [ -f .git ]; then rm .git && git init -q && git add -A && git -c user.name=vagrant -c user.email=vagrant commit -qm 'vagrant'; fi && git config --system --add safe.directory /vagrant", name: "fix-git-submodule"
     noble.vm.provision :shell, path: "Tools/vagrant/initvagrant.sh"
     noble.vm.provider "virtualbox" do |vb|
       vb.name = "ArduPilot (noble)"
     end
     noble.vm.boot_timeout = 1200
+    # Forward AirSim sensor data (host:9003) to SITL in VM (guest:9003)
+    noble.vm.network "forwarded_port", guest: 9003, host: 9003, protocol: "udp"
   end
   config.vm.define "noble-desktop", autostart: false do |noble|
     noble.vm.box = "bento/ubuntu-24.04"
