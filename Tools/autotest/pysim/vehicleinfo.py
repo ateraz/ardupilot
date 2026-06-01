@@ -404,6 +404,11 @@ class VehicleInfo(object):
                 "default_params_filename": "default_params/plane-jsbsim.parm",
                 "external": True,
             },
+            "plane-airsim": {
+                "waf_target": "bin/arduplane",
+                "default_params_filename": ["models/plane.parm",
+                                            "default_params/airsim-plane.parm"],
+            },
             "scrimmage-plane" : {
                 "waf_target": "bin/arduplane",
                 "default_params_filename": "models/plane.parm",

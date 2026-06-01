@@ -1,0 +1,15 @@
+# Extra ArduPlane parameters for AirSim pose-sync simulation.
+# Layered on top of models/plane.parm (loaded by plane-airsim frame).
+#
+# Usage: sim_vehicle.py -v ArduPlane -f plane-airsim -l LAT,LON,ALT,HDG
+
+# --- GPS config (match AirSim copter setup) ---
+SIM_GPS1_LAG_MS  0
+GPS1_DELAY_MS    20
+
+# --- Takeoff ---
+TKOFF_THR_MAX    100
+TKOFF_ALT        50
+
+# --- Arming ---
+ARMING_CHECK     0
