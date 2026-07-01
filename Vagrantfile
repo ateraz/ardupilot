@@ -141,6 +141,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     noble.vm.box_version = "202508.03.0"
     noble.vm.synced_folder ".", "/vagrant", type: "rsync",
       rsync__exclude: ["build/"]
+    # sim repo's SITL launcher + param overrides (host: ../scripts, i.e.
+    # simulation/scripts). Lets `run_sitl.sh` be the single launcher inside the VM.
+    # rsync is one-way host->guest: after editing scripts run `vagrant rsync`.
+    # Guarded so a standalone ardupilot fork checkout (no sibling ../scripts) still
+    # boots -- Vagrant would otherwise abort on the missing host path.
+    sim_scripts = File.expand_path("../scripts", __dir__)
+    if File.directory?(sim_scripts)
+      noble.vm.synced_folder sim_scripts, "/simulation/scripts", type: "rsync"
+    end
     if Vagrant.has_plugin?("vagrant-vbguest")
       noble.vbguest.auto_update = false
     end
